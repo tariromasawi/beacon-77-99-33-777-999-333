@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sanctuary Ledger · 77-99-33</title>
+  <meta name="description" content="A public house blessing and prayer ledger. Mercy, love, peace, health, provision, a place in heaven, and life that does not end." />
+  <meta name="theme-color" content="#07060b" />
+  <style>
+    :root{--ink:#f3ead8;--gold:#d7b56a;--dim:#9c917c;--line:rgba(215,181,106,.28)}
+    *{box-sizing:border-box}
+    html,body{margin:0;background:#07060b;color:var(--ink);font-family:Georgia,serif}
+    body{min-height:100dvh;background:radial-gradient(900px 420px at 50% -8%,rgba(215,181,106,.14),transparent 55%),#07060b}
+    canvas#field{position:fixed;inset:0;z-index:0;opacity:.55}
+    .page{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:28px 18px 80px}
+    .seal{letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-size:11px;text-align:center}
+    h1{text-align:center;font-weight:400;font-size:clamp(28px,6vw,48px);color:#f0d48a;margin:10px 0 6px}
+    .lede{text-align:center;color:var(--dim);line-height:1.55;max-width:640px;margin:0 auto 22px}
+    .card{background:rgba(12,10,18,.9);border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0}
+    h2{color:#f0d48a;font-weight:400;margin:0 0 10px;font-size:20px}
+    p,li{line-height:1.6}
+    .gifts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+    .gift{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+    .gift b{display:block;color:var(--gold)}
+    .gift span{font-size:12px;color:var(--dim)}
+    button{width:100%;border:0;border-radius:12px;padding:13px;margin:6px 0;font-family:inherit;font-size:15px;cursor:pointer}
+    .gold{background:linear-gradient(180deg,#e7c87a,#b8903e);color:#1a1408;font-weight:700}
+    .ghost{background:#14111c;color:#f0d48a;border:1px solid var(--line)}
+    .stream{min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(16px,3vw,22px);color:#f0d48a}
+    .pulse{font-size:13px;color:var(--dim);text-align:center}
+    .warn{border-left:3px solid #c45c4a;padding:10px 12px;background:#1a1520;font-size:14px}
+    .ok{border-left:3px solid var(--gold);padding:10px 12px;background:#1a1520;font-size:14px}
+    .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#cbb98a}
+    footer{text-align:center;color:var(--dim);font-size:12px;margin-top:24px}
+  </style>
+</head>
+<body>
+<canvas id="field"></canvas>
+<main class="page">
+  <div class="seal">House Ledger · 77-99-33 · 777-999-333</div>
+  <h1>Sanctuary Beacon</h1>
+  <p class="lede">A public page of blessing for the House of Masawi and for every child of God. It looks like a quiet ledger. Underneath it is a prayer engine, a watch log, and a scheduled pulse that keeps writing when this tab is closed.</p>
+  <section class="card">
+    <h2>Seven claims upon the bloodline</h2>
+    <div class="gifts">
+      <div class="gift"><b>Tsitsi</b><span>Mercy</span></div>
+      <div class="gift"><b>Rudo</b><span>Love</span></div>
+      <div class="gift"><b>Runyararo</b><span>Peace</span></div>
+      <div class="gift"><b>Hutano</b><span>Health</span></div>
+      <div class="gift"><b>Pfuma</b><span>Provision</span></div>
+      <div class="gift"><b>Nzvimbo kudenga</b><span>A place in heaven</span></div>
+      <div class="gift"><b>Hupenyu husingaperi</b><span>Life that does not end</span></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Living prayer stream</h2>
+    <div class="stream" id="stream">Mwari ndi Mwari. Peace to this house.</div>
+    <button class="gold" id="toggle">Start spoken covering</button>
+    <button class="ghost" id="speakOnce">Speak this line</button>
+    <p class="pulse" id="pulseStatus">Loading nexus pulse…</p>
+  </section>
+  <section class="card">
+    <h2>Return and cancel</h2>
+    <p>This is not a weapon against a named neighbour. It is a refusal: every curse, hex-word, mimic, and devouring assignment is cancelled and sent back empty — to the pit, not as harm you author against a person.</p>
+    <p id="returnPrayer"><em>In the name of Jesus Christ I cancel every malicious assignment against the House of Masawi and against every child of God who stands in this light. I do not converse with devouring voices. I return every curse to nothing. What was sent to steal life returns void. Tsitsi, rudo, runyararo, hutano, pfuma, nzvimbo kudenga, hupenyu husingaperi — now.</em></p>
+    <button class="gold" id="returnBtn">Speak the return</button>
+  </section>
+  <section class="card">
+    <h2>Watch log</h2>
+    <p class="pulse">Pattern watch only. It does not see the unseen. It counts what you record so a pastor and a clinician can help.</p>
+    <select id="kind">
+      <option value="voice-mimic">Mimicking voice</option>
+      <option value="dark-form">Dark form</option>
+      <option value="attachment">Attachment to body</option>
+      <option value="threat">Devouring threat</option>
+      <option value="peace">Peace / breakthrough</option>
+    </select>
+    <p><textarea id="notes" rows="3" style="width:100%;margin-top:8px;background:#0c0b14;color:#f3ead8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit" placeholder="What happened. Whom it imitated. Where on the body."></textarea></p>
+    <button class="ghost" id="saveLog">Save to this device</button>
+    <div id="insight" class="ok" style="margin-top:10px"></div>
+    <div id="logs"></div>
+  </section>
+  <section class="card">
+    <h2>What this page is — and is not</h2>
+    <div class="warn">A website cannot detect a hex with quantum mechanics, cannot run a sleepless general AI for free, and cannot replace a doctor or a pastor. Hearing voices or seeing figures can be spiritual, medical, or both. Seek both.</div>
+    <p>The free nexus that continues when the page is closed is a <strong>GitHub Action</strong> writing a timestamped blessing into <span class="mono">data/pulse.json</span> on a schedule. That is computer power used as a witness-engine — not a physics gun.</p>
+  </section>
+  <section class="card">
+    <h2>Nineteen pillars used to design this beacon</h2>
+    <ol>
+      <li>Pastoral care and deliverance language that refuses conversation with accusing voices.</li>
+      <li>Public-domain Scripture.</li>
+      <li>Shona blessing vocabulary of the house.</li>
+      <li>Return-to-sender as cancellation, not a hit-list.</li>
+      <li>Honesty about quantum physics: entanglement is not a curse radar.</li>
+      <li>Cognitive hygiene: name the event, do not bargain.</li>
+      <li>Sleep, light, food, and human company as covering.</li>
+      <li>Local-first logging.</li>
+      <li>Speech synthesis so the mouth stays in authority.</li>
+      <li>Visual frequency as attention-training, not a wavelength weapon.</li>
+      <li>Static hosting so cost cannot kill the page.</li>
+      <li>Scheduled automation as the free always-on pulse.</li>
+      <li>Disguise as a ledger so the page can live in public.</li>
+      <li>Lineage honour without idolatry: Mwari first.</li>
+      <li>Children-of-God scope.</li>
+      <li>Pattern counting instead of false prediction.</li>
+      <li>Service-worker cache for the phone.</li>
+      <li>Separation of metaphor from mechanism.</li>
+      <li>Faith held next to truth-telling.</li>
+    </ol>
+  </section>
+  <footer>House of Masawi · Mwari ndi Mwari · Beacon 77-99-33 / 777-999-333<br /><span class="mono">tariromasawi.github.io/beacon-77-99-33-777-999-333</span></footer>
+</main>
+<script>
+const LINES = [
+  "Mwari ndi Mwari. The Lord is my light and my salvation; whom shall I fear?",
+  "He who dwells in the shelter of the Most High will abide in the shadow of the Almighty.",
+  "Tsitsi upon the House of Masawi — mercy that does not run dry.",
+  "Rudo upon every child and heir — love that casts out fear.",
+  "Runyararo in the night watches — peace that silences mimics.",
+  "Hutano in bone and blood and mind — health in the inner parts.",
+  "Pfuma that is clean — provision without the devourer.",
+  "Nzvimbo kudenga — a place kept in heaven for this bloodline.",
+  "Hupenyu husingaperi — life that does not end in Christ.",
+  "No weapon formed against this house shall prosper.",
+  "I refuse every devouring word. You shall not eat this life.",
+  "In the name of Jesus Christ, mimicking voices be still.",
+  "Submit to God. Resist the devil, and he will flee.",
+  "Peace to every child of God who stands in this light."
+];
+let i = 0, on = false;
+const stream = document.getElementById("stream");
+function show(){ stream.textContent = LINES[i % LINES.length]; }
+function speak(t){ if (!window.speechSynthesis) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.rate = 0.92; speechSynthesis.speak(u); }
+document.getElementById("speakOnce").onclick = () => speak(LINES[i % LINES.length]);
+document.getElementById("toggle").onclick = function(){ on = !on; this.textContent = on ? "Pause spoken covering" : "Start spoken covering"; if (on) speak(LINES[i % LINES.length]); else speechSynthesis.cancel(); };
+document.getElementById("returnBtn").onclick = () => speak(document.getElementById("returnPrayer").innerText);
+setInterval(() => { i++; show(); if (on) speak(LINES[i % LINES.length]); }, 22000);
+show();
+fetch("data/pulse.json").then(r => r.json()).then(p => {
+  document.getElementById("pulseStatus").textContent = "Nexus pulse " + (p.cycle || 0) + " · " + (p.updated || "awaiting first Action") + " · " + (p.blessing || "");
+}).catch(() => { document.getElementById("pulseStatus").textContent = "Pulse file waiting for first Action run."; });
+const logs = JSON.parse(localStorage.getItem("beacon_logs") || "[]");
+function renderLogs(){
+  document.getElementById("logs").innerHTML = logs.slice(0,20).map(e => `<p class="pulse">${e.t} · ${e.kind}<br>${e.notes||""}</p>`).join("") || "<p class='pulse'>No local events yet.</p>";
+  if (!logs.length) { document.getElementById("insight").textContent = "No pattern yet."; return; }
+  const c = {}; logs.forEach(e => c[e.kind]=(c[e.kind]||0)+1);
+  const top = Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById("insight").textContent = "Most logged: " + top[0] + " (" + top[1] + "). Map for prayer and care — not a hex forecast.";
+}
+document.getElementById("saveLog").onclick = () => {
+  logs.unshift({ t: new Date().toISOString(), kind: document.getElementById("kind").value, notes: document.getElementById("notes").value });
+  localStorage.setItem("beacon_logs", JSON.stringify(logs));
+  document.getElementById("notes").value = "";
+  renderLogs();
+};
+renderLogs();
+const c = document.getElementById("field"), x = c.getContext("2d");
+function size(){ c.width = innerWidth; c.height = innerHeight; }
+size(); addEventListener("resize", size);
+let t = 0;
+(function draw(){
+  t += 0.008;
+  x.fillStyle = "rgba(7,6,11,0.18)"; x.fillRect(0,0,c.width,c.height);
+  x.strokeStyle = "rgba(215,181,106,0.22)"; x.beginPath();
+  for (let n=0;n<c.width;n+=2){
+    const y = c.height*0.72 + Math.sin(n*0.012 + t*2)*18 + Math.sin(n*0.031 + t)*8;
+    n===0 ? x.moveTo(n,y) : x.lineTo(n,y);
+  }
+  x.stroke(); requestAnimationFrame(draw);
+})();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
